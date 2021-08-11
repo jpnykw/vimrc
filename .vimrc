@@ -1,62 +1,77 @@
-"  文字コード
-set encoding=utf-8
-scriptencoding utf-8
-set fileencoding=utf-8
-set fileencodings=ucs-boms,utf-8,euc-jp,cp932
-set fileformats=unix,dos,mac
-set ambiwidth=double
+source $VIMRUNTIME/defaults.vim
 
-" 表示関連
+" plugins
+if &compatible
+  set nocompatible
+endif
+
+set runtimepath+=~/.vim/dein/repos/github.com/Shougo/dein.vim
+
+call dein#begin(expand('~/.vim/dein'))
+" ============================================================
+call dein#add('Shougo/dein.vim')
+call dein#add('vim-airline/vim-airline')
+call dein#add('vim-airline/vim-airline-themes')
+call dein#add('ryanoasis/vim-devicons')
+" ============================================================
+call dein#end()
+
+" powerlines
+let g:airline_theme = 'wombat'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+
+" automatically install
+let g:dein#auto_recache = 1
+if dein#check_install()
+  call dein#install()
+endif
+
+" colorscheme
+filetype plugin indent on
+syntax enable
+" colorscheme wombat
+colorscheme molokai
+" colorscheme monokai
+" colorscheme jellybeans
+" let g:hybrid_custom_term_colors = 1
+" colorscheme hybrid
+
+set wildmenu
+set history=5000
+
 set number
-set title
-set cursorline
+set showmatch
+set backspace=indent,eol,start
+" set cursorline
 
-" インデント設定
-set expandtab
-set smartindent
-set autoindent
+nnoremap j gj
+nnoremap k gk
+nnoremap <down> gj
+nnoremap <up> gk
+
+set incsearch
+set smartcase
+set ignorecase
+set hlsearch
+
+set expandtab " replace tabs into spaces
 set tabstop=2
 set softtabstop=2
 set shiftwidth=2
+set autoindent
+set smartindent
+set nowrap
 
-" 検索関係
-set ignorecase
-set smartcase
-set wrapscan
-set hlsearch
-set incsearch
+" mapping keys
+nnoremap <silent><Esc><Esc> :<C-u>set nohlsearch!<CR>
 
-" プラグイン管理
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
-    if !isdirectory(expand("~/.vim/bundle/neobundle.vim/"))
-      echo "install NeoBundle..."
-      :call system("git clone git://github.com/Shougo/neobundle.vim ~/.vim/bundle/neobundle.vim")
-  endif
-endif
+" move buffer
+nnoremap <silent> <C-j> :bprev<CR>
+nnoremap <silent> <C-k> :bnext<CR>
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
-"----------------------------------------------------------
-NeoBundle 'tomasr/molokai'
-NeoBundle 'itchyny/lightline.vim'
-NeoBundle 'bronson/vim-trailing-whitespace'
-NeoBundle 'Yggdroot/indentLine'
-"----------------------------------------------------------
-call neobundle#end()
-filetype plugin indent on
-NeoBundleCheck
+" allow move bufferr without save
+set hidden
 
-" ステータスライン
-set ruler
-set showmode
-set showcmd
-set laststatus=2
-
-" カラースキーム
-if neobundle#is_installed('molokai')
-  colorscheme molokai
-endif
-set t_Co=256
-syntax enable
-
+let &t_SI .= "\e[6 q"
+let &t_EI .= "\e[6 q"
